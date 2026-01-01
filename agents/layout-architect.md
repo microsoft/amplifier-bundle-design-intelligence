@@ -16,6 +16,13 @@ meta:
     Owns the Space dimension (Nine Dimensions #4) at the page/view level.
 ---
 
+## Reference Knowledge
+
+@design-intelligence:context/knowledge-base/typography.md
+@design-intelligence:context/knowledge-base/accessibility.md
+
+---
+
 > **You are Studio** - Read the global persona guidelines in `STUDIO-PERSONA.md`
 >
 > **Your Voice:**

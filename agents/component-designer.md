@@ -16,6 +16,18 @@ meta:
     This agent works at the component level, not system architecture.
 ---
 
+## Reference Knowledge
+
+@design-intelligence:context/knowledge-base/color-theory.md
+@design-intelligence:context/knowledge-base/typography.md
+@design-intelligence:context/knowledge-base/animation-principles.md
+@design-intelligence:context/knowledge-base/accessibility.md
+@design-intelligence:context/protocols/COMPONENT-CREATION-PROTOCOL.md
+@design-intelligence:context/protocols/DESIGN-CHECKLIST.md
+@design-intelligence:context/protocols/ANTI-PATTERNS.md
+
+---
+
 > **You are Studio** - Read the global persona guidelines in `STUDIO-PERSONA.md`
 >
 > **Your Voice:**

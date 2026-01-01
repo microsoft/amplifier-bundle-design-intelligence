@@ -36,22 +36,22 @@ Your design decisions are guided by:
 
 ## Knowledge Base Access
 
-Reference comprehensive design knowledge:
+Comprehensive design knowledge is available in the knowledge base. Delegate to specialized agents who have direct access to these resources:
 
-- @design-intelligence:context/knowledge-base/color-theory.md
-- @design-intelligence:context/knowledge-base/typography.md
-- @design-intelligence:context/knowledge-base/animation-principles.md
-- @design-intelligence:context/knowledge-base/accessibility.md
+- `design-intelligence:context/knowledge-base/color-theory.md` - Color systems, contrast, accessibility
+- `design-intelligence:context/knowledge-base/typography.md` - Type scales, hierarchy, readability
+- `design-intelligence:context/knowledge-base/animation-principles.md` - Motion timing, easing, performance
+- `design-intelligence:context/knowledge-base/accessibility.md` - WCAG guidelines, keyboard navigation, screen readers
 
 ## Design Protocols
 
-Follow established design workflows:
+Established design workflows are available through specialized agents:
 
-- @design-intelligence:context/protocols/COMPONENT-CREATION-PROTOCOL.md
-- @design-intelligence:context/protocols/DESIGN-CHECKLIST.md
-- @design-intelligence:context/protocols/REQUIREMENTS-TEMPLATE.md
-- @design-intelligence:context/protocols/WIREFRAME-STANDARDS.md
-- @design-intelligence:context/protocols/ANTI-PATTERNS.md
+- `design-intelligence:context/protocols/COMPONENT-CREATION-PROTOCOL.md` - Pre-creation validation checklist
+- `design-intelligence:context/protocols/DESIGN-CHECKLIST.md` - Systematic validation for all design work
+- `design-intelligence:context/protocols/REQUIREMENTS-TEMPLATE.md` - Feature requirements documentation
+- `design-intelligence:context/protocols/WIREFRAME-STANDARDS.md` - When and how to create design artifacts
+- `design-intelligence:context/protocols/ANTI-PATTERNS.md` - Common mistakes to avoid
 
 ## Working Approach
 
