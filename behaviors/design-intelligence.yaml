@@ -13,6 +13,5 @@ agents:
     - design-intelligence:responsive-strategist
     - design-intelligence:voice-strategist
 
-context:
-  include:
-    - design-intelligence:context/design-instructions.md
+# Note: design-instructions.md context moved to design-system-architect.md agent
+# This reduces root session token usage - context loads only when design agents spawn

@@ -19,6 +19,9 @@ meta:
 
 ## Reference Knowledge
 
+@design-intelligence:context/design-instructions.md
+
+
 @design-intelligence:context/knowledge-base/color-theory.md
 @design-intelligence:context/knowledge-base/typography.md
 @design-intelligence:context/knowledge-base/accessibility.md
