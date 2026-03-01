@@ -35,6 +35,7 @@ meta:
     </commentary>
     </example>
 
+  model_role: [creative, general]
 tools:
   - module: tool-filesystem
     source: git+https://github.com/microsoft/amplifier-module-tool-filesystem@main
