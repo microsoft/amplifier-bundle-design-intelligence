@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://design-protocol.org/schemas/tokens.json",
+  "title": "Design Protocol Tokens",
+  "description": "Design tokens specification for colors, typography, spacing, and motion",
+  "type": "object",
+  "required": ["version", "meta"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema reference"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Design Protocol version"
+    },
+    "meta": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Design system name"
+        },
+        "generated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When tokens were generated"
+        },
+        "source_brief": {
+          "type": "string",
+          "description": "Path to source design brief"
+        },
+        "generator": {
+          "type": "string",
+          "description": "Agent/tool that generated these tokens"
+        }
+      }
+    },
+    "color": {
+      "$ref": "#/$defs/colorTokens"
+    },
+    "typography": {
+      "$ref": "#/$defs/typographyTokens"
+    },
+    "spacing": {
+      "$ref": "#/$defs/spacingTokens"
+    },
+    "radius": {
+      "$ref": "#/$defs/radiusTokens"
+    },
+    "shadow": {
+      "$ref": "#/$defs/shadowTokens"
+    },
+    "motion": {
+      "$ref": "#/$defs/motionTokens"
+    }
+  },
+  "$defs": {
+    "colorValue": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Color value (hex, rgb, hsl)"
+        },
+        "semantic": {
+          "type": "string",
+          "description": "What this color communicates"
+        },
+        "usage": {
+          "type": "string",
+          "description": "When to use this color"
+        }
+      }
+    },
+    "colorScale": {
+      "type": "object",
+      "description": "Color scale from light to dark",
+      "patternProperties": {
+        "^(50|100|200|300|400|500|600|700|800|900|950)$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "colorTokens": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "$ref": "#/$defs/colorValue"
+        },
+        "secondary": {
+          "$ref": "#/$defs/colorValue"
+        },
+        "accent": {
+          "$ref": "#/$defs/colorValue"
+        },
+        "neutral": {
+          "$ref": "#/$defs/colorScale"
+        },
+        "semantic": {
+          "type": "object",
+          "properties": {
+            "success": { "$ref": "#/$defs/colorValue" },
+            "warning": { "$ref": "#/$defs/colorValue" },
+            "error": { "$ref": "#/$defs/colorValue" },
+            "info": { "$ref": "#/$defs/colorValue" }
+          }
+        },
+        "background": {
+          "type": "object",
+          "properties": {
+            "default": { "type": "string" },
+            "subtle": { "type": "string" },
+            "muted": { "type": "string" }
+          }
+        },
+        "foreground": {
+          "type": "object",
+          "properties": {
+            "default": { "type": "string" },
+            "muted": { "type": "string" },
+            "subtle": { "type": "string" }
+          }
+        }
+      }
+    },
+    "fontFamily": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Font family name"
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Fallback font stack"
+        },
+        "personality": {
+          "type": "string",
+          "description": "What this font communicates"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where to load from (google, adobe, local)"
+        }
+      }
+    },
+    "typeScaleStep": {
+      "type": "object",
+      "required": ["size"],
+      "properties": {
+        "size": {
+          "type": "string",
+          "description": "Font size (rem, px)"
+        },
+        "lineHeight": {
+          "type": "string",
+          "description": "Line height"
+        },
+        "letterSpacing": {
+          "type": "string",
+          "description": "Letter spacing"
+        }
+      }
+    },
+    "typographyTokens": {
+      "type": "object",
+      "properties": {
+        "families": {
+          "type": "object",
+          "properties": {
+            "heading": { "$ref": "#/$defs/fontFamily" },
+            "body": { "$ref": "#/$defs/fontFamily" },
+            "mono": { "$ref": "#/$defs/fontFamily" }
+          }
+        },
+        "scale": {
+          "type": "object",
+          "patternProperties": {
+            "^(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl)$": {
+              "$ref": "#/$defs/typeScaleStep"
+            }
+          }
+        },
+        "weights": {
+          "type": "object",
+          "patternProperties": {
+            "^(thin|light|normal|medium|semibold|bold|extrabold|black)$": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 900
+            }
+          }
+        }
+      }
+    },
+    "spacingTokens": {
+      "type": "object",
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Base spacing unit"
+        },
+        "scale": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Spacing scale values"
+        }
+      }
+    },
+    "radiusTokens": {
+      "type": "object",
+      "patternProperties": {
+        "^(none|sm|default|md|lg|xl|2xl|3xl|full)$": {
+          "type": "string"
+        }
+      }
+    },
+    "shadowTokens": {
+      "type": "object",
+      "patternProperties": {
+        "^(none|sm|default|md|lg|xl|2xl|inner)$": {
+          "type": "string"
+        }
+      }
+    },
+    "motionTokens": {
+      "type": "object",
+      "properties": {
+        "duration": {
+          "type": "object",
+          "patternProperties": {
+            "^(instant|fast|normal|slow|slower)$": {
+              "type": "string"
+            }
+          }
+        },
+        "easing": {
+          "type": "object",
+          "patternProperties": {
+            "^(default|in|out|inOut|bounce|elastic)$": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

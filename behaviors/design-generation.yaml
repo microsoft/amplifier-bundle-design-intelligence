@@ -1,0 +1,14 @@
+bundle:
+  name: design-generation-behavior
+  version: 1.0.0
+  description: Generation capability that produces Design Protocol-compliant artifacts and transforms design decisions into machine-readable tokens, specs, and export packages.
+
+agents:
+  include:
+    - design-intelligence:token-generator
+    - design-intelligence:spec-writer
+    - design-intelligence:export-packager
+
+context:
+  include:
+    - design-intelligence:context/generation-instructions.md

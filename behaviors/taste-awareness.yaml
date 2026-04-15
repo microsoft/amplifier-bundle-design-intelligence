@@ -1,0 +1,8 @@
+bundle:
+  name: taste-awareness-behavior
+  version: 1.0.0
+  description: Personal taste profile awareness and preference learning for design agents. Loads user/project preferences into root session context.
+
+context:
+  include:
+    - design-intelligence:context/taste-awareness-instructions.md

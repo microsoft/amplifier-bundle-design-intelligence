@@ -1,0 +1,15 @@
+bundle:
+  name: design-context-behavior
+  version: 1.0.0
+  description: Structured design context system — auto-maintained context.json, inference-driven completeness, and design-check self-correction for all design agents.
+
+agents:
+  include:
+    - design-intelligence:design-context
+    - design-intelligence:design-check
+
+context:
+  include:
+    - design-intelligence:context/design-context-instructions.md
+    - design-intelligence:context/inference-chains.md
+    - design-intelligence:context/design-check-instructions.md

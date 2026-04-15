@@ -1,0 +1,8 @@
+bundle:
+  name: design-baseline-behavior
+  version: 1.0.0
+  description: Passive design quality baseline. Improves all UI code generation with design principles, anti-patterns, and quality standards without requiring explicit agent invocation.
+
+context:
+  include:
+    - design-intelligence:context/design-baseline.md

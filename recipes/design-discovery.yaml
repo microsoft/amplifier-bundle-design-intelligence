@@ -1,0 +1,99 @@
+# Design Discovery Recipe
+# Full discovery-to-design workflow using discovery bundle + design intelligence
+
+name: design-discovery
+description: |
+  Complete design discovery workflow that captures requirements through 
+  structured interviewing, gathers relevant inspiration, and synthesizes 
+  into a design direction.
+
+# Input context
+# - project_description: What are we building?
+# - project_type: design/technical/learning/process/general (optional, auto-detected)
+
+steps:
+  # Phase 1: Discovery (uses discovery bundle)
+  - id: discover
+    agent: discovery:discovery-interviewer
+    prompt: |
+      Conduct design discovery for the following project:
+      
+      {{project_description}}
+      
+      Focus on:
+      - Purpose and intent (what, why, who, success criteria)
+      - Visual/experiential expression (style, voice, aesthetic direction)
+      - Context and appropriateness (industry, audience, competition)
+      - Adaptive considerations (responsive, accessibility, modes)
+      
+      Use the 4-layer discovery methodology. Stop when you reach readiness.
+      
+      Output a comprehensive Discovery Brief in markdown format.
+
+  # Phase 2: Research (uses design-intelligence research capability)
+  - id: research
+    agent: design-intelligence:research-runner
+    prompt: |
+      Based on this discovery brief, find relevant design inspiration:
+      
+      ---
+      {{steps.discover.result}}
+      ---
+      
+      Research approach:
+      1. Identify key design themes from the brief
+      2. Search the design archive for relevant trends
+      3. If archive lacks coverage, note gaps for future research
+      4. Find 3-5 reference examples that align with the direction
+      
+      Output a Research Context summary with:
+      - Relevant trends from archive
+      - Reference examples with analysis
+      - Design patterns that apply
+      - Gaps or areas needing more research
+
+  # Phase 3: Synthesis (uses art-director to synthesize)
+  - id: synthesize
+    agent: design-intelligence:art-director
+    prompt: |
+      Synthesize the discovery and research into a clear design direction.
+      
+      ## Discovery Brief
+      {{steps.discover.result}}
+      
+      ## Research Context
+      {{steps.research.result}}
+      
+      Create a Design Direction document that includes:
+      
+      ### 1. Aesthetic Strategy
+      - Overall visual direction
+      - Key adjectives (3-5 words that define the feel)
+      - What to embrace vs. avoid
+      
+      ### 2. Design Principles
+      - 3-5 guiding principles specific to this project
+      - How they connect to the Nine Dimensions
+      
+      ### 3. Initial Recommendations
+      - Color direction (warm/cool, palette suggestions)
+      - Typography direction (personality, suggested families)
+      - Layout approach (structure, density, rhythm)
+      - Motion philosophy (subtle/expressive, key moments)
+      
+      ### 4. Reference Synthesis
+      - What to take from each reference
+      - What to intentionally differ on
+      
+      ### 5. Open Questions
+      - Decisions that need user input
+      - Trade-offs to discuss
+      
+      This document will feed into token generation and component specification.
+
+# Output
+# The final result is the synthesized Design Direction from the art-director,
+# which can be used to:
+# 1. Generate design tokens (future: token-generator agent)
+# 2. Write component specs (future: spec-writer agent)
+# 3. Create export packages (future: export-packager agent)

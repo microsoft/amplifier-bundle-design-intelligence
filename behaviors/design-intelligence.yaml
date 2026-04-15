@@ -1,3 +1,7 @@
+# NOTE: This behavior requires design-context behavior to also be loaded.
+# Advisory agents delegate to design-check (from design-context) for self-correction.
+# Loading this behavior without design-context causes silent validation failures.
+
 bundle:
   name: design-intelligence-behavior
   version: 1.0.0
@@ -12,6 +16,10 @@ agents:
     - design-intelligence:art-director
     - design-intelligence:responsive-strategist
     - design-intelligence:voice-strategist
+
+context:
+  include:
+    - context: design-intelligence:context/inference-chains.md
 
 # Note: design-instructions.md context moved to design-system-architect.md agent
 # This reduces root session token usage - context loads only when design agents spawn

@@ -1,0 +1,357 @@
+// design-intelligence-enhanced v2.3.0 — Architecture Diagram
+// Pipeline: Decompose → Research → Synthesize → Verify → Generate
+// Generated: 2026-03-26
+
+digraph design_intelligence_enhanced {
+
+    // ── Graph-level attributes ─────────────────────────────────────
+    label="design-intelligence-enhanced  v2.3.0\nDecompose → Research → Synthesize → Verify → Generate"
+    labelloc=t
+    labeljust=c
+    rankdir=LR
+    compound=true
+    fontname="Helvetica"
+    fontsize=15
+    pad="0.6"
+    nodesep=0.55
+    ranksep=1.5
+
+    // ── Global defaults ────────────────────────────────────────────
+    node [fontname="Helvetica" fontsize=9 style="rounded,filled" fillcolor="#ffffff" color="#555555"]
+    edge [fontname="Helvetica" fontsize=8 color="#555555" arrowsize=0.8]
+
+
+    // ══════════════════════════════════════════════════════════════
+    // CLUSTERS — declared before edges so layout engine can place them
+    // ══════════════════════════════════════════════════════════════
+
+    // ── External Dependencies ──────────────────────────────────────
+    subgraph cluster_ext {
+        label="External Dependencies"
+        style="filled,dashed"
+        fillcolor="#f9fafb"
+        color="#9ca3af"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        amplifier_foundation [
+            label="amplifier-foundation\n7 advisory agents (ext-bundle)"
+            shape=box style="dashed,filled" fillcolor="#ffffff" color="#9ca3af"
+        ]
+        discovery_interviewer [
+            label="discovery:discovery-interviewer\namplifier-bundle-discovery"
+            shape=box style="dashed,filled" fillcolor="#ffffff" color="#9ca3af"
+        ]
+        image_vision_skill [
+            label="image-vision\nruntime skill (external)"
+            shape=ellipse style="dashed,filled" fillcolor="#ffffff" color="#9ca3af"
+        ]
+    }
+
+    // ── Disabled Sub-Bundle ────────────────────────────────────────
+    // NOTE: design-verification is intentionally isolated (no runtime edges)
+    subgraph cluster_disabled {
+        label="⚠  Temporarily Disabled"
+        style="filled,dashed"
+        fillcolor="#fef2f2"
+        color="#ef4444"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        design_verification [
+            label="design-verification sub-bundle\ndebugging profile_hint error"
+            shape=box style="dashed,filled"
+            fillcolor="#fee2e2" color="#ef4444" fontcolor="#b91c1c"
+        ]
+    }
+
+    // ── Behaviors ─────────────────────────────────────────────────
+    subgraph cluster_behaviors {
+        label="Behaviors  (7)"
+        style="filled"
+        fillcolor="#f3f4f6"
+        color="#9ca3af"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=folder style="filled" fillcolor="#f3f4f6" color="#6b7280"]
+
+        beh_baseline     [label="design-baseline\nPassive quality layer — design-baseline.md"]
+        beh_intelligence [label="design-intelligence\nLoads all 7 advisory agents"]
+        beh_research     [label="design-research\nResearch agents + research context"]
+        beh_generation   [label="design-generation\nGeneration agents + generation context"]
+        beh_context      [label="design-context\nContext agents + inference-chains"]
+        beh_taste        [label="taste-awareness\ntaste-awareness-instructions.md"]
+        beh_skills       [label="design-skills\nRegisters skills with superpowers"]
+    }
+
+    // ── Advisory Agents ───────────────────────────────────────────
+    subgraph cluster_advisory {
+        label="Advisory Agents  (7)  ·  loaded by design-intelligence"
+        style="filled"
+        fillcolor="#dbeafe"
+        color="#3b82f6"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=box style="rounded,filled" fillcolor="#dbeafe" color="#3b82f6"]
+
+        art_director   [label="art-director\nAesthetic strategy · visual direction  (Style)"]
+        dsa            [label="design-system-architect\nToken architecture · design foundations"]
+        comp_designer  [label="component-designer\nUI components · variants · states  (All Dimensions)"]
+        layout_arch    [label="layout-architect\nPage structure · IA · grids  (Space)"]
+        resp_strat     [label="responsive-strategist\nBreakpoints · touch patterns · fluid systems"]
+        anim_choreo    [label="animation-choreographer\nMotion timing · easing · accessibility"]
+        voice_strat    [label="voice-strategist\nVoice & tone · UX writing · microcopy  (Voice)"]
+    }
+
+    // ── Research Agents ───────────────────────────────────────────
+    subgraph cluster_research {
+        label="Research Agents  (2)  ·  loaded by design-research"
+        style="filled"
+        fillcolor="#dcfce7"
+        color="#22c55e"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=box style="rounded,filled" fillcolor="#dcfce7" color="#22c55e"]
+
+        research_analyst [label="research-analyst\nCross-domain creative research · L3-4 pattern extraction"]
+        research_runner  [label="research-runner\nRSS feed execution · archive maintenance"]
+    }
+
+    // ── Generation Agents ─────────────────────────────────────────
+    subgraph cluster_generation {
+        label="Generation Agents  (3)  ·  loaded by design-generation"
+        style="filled"
+        fillcolor="#fef3c7"
+        color="#f59e0b"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=box style="rounded,filled" fillcolor="#fef3c7" color="#f59e0b"]
+
+        token_gen   [label="token-generator\nDesign Protocol tokens  →  tokens.json / tokens.css"]
+        spec_writer [label="spec-writer\nComponent JSON specs per Design Protocol"]
+        export_pkg  [label="export-packager\nFinal export package for coding agents"]
+    }
+
+    // ── Context Agents ────────────────────────────────────────────
+    subgraph cluster_context {
+        label="Context Agents  (2)  ·  loaded by design-context"
+        style="filled"
+        fillcolor="#ede9fe"
+        color="#8b5cf6"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=box style="rounded,filled" fillcolor="#ede9fe" color="#8b5cf6"]
+
+        design_ctx   [label="design-context\nReconciler · maintains context.json  (model_role: fast)"]
+        design_check [label="design-check\nThree-layer validation (static + structural + visual)\nself-correction loop"]
+    }
+
+    // ── Recipes ───────────────────────────────────────────────────
+    subgraph cluster_recipes {
+        label="Recipes  (4)"
+        style="filled"
+        fillcolor="#ffedd5"
+        color="#f97316"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=component style="filled" fillcolor="#ffedd5" color="#f97316"]
+
+        r_discovery  [label="design-discovery\ndiscovery-interviewer → research-runner → art-director"]
+        r_sys_export [label="design-system-export\ndiscovery → art-director → tokens → spec → export"]
+        r_to_impl    [label="design-to-implementation\nFull pipeline: idea → discovery → generate → export"]
+        r_scrape     [label="weekly-design-scrape\nresearch-runner ×3  (fetch / summary / index)"]
+    }
+
+    // ── Skills ────────────────────────────────────────────────────
+    subgraph cluster_skills {
+        label="Skills  (2)"
+        style="filled"
+        fillcolor="#fce7f3"
+        color="#ec4899"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=ellipse style="filled" fillcolor="#fce7f3" color="#ec4899"]
+
+        sk_brainstorm [label="design-brainstorming\n/brainstorm  superpowers integration"]
+        sk_planning   [label="design-planning\n/write-plan  superpowers integration"]
+    }
+
+    // ── Runtime Artifacts (.design/) ──────────────────────────────
+    subgraph cluster_artifacts {
+        label=".design/  Runtime Artifacts"
+        style="filled"
+        fillcolor="#cffafe"
+        color="#06b6d4"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=cylinder style="filled" fillcolor="#cffafe" color="#06b6d4"]
+
+        art_context   [label="context.json\nauto-maintained by design-context"]
+        art_aesthetic [label="AESTHETIC-GUIDE.md\nwritten by art-director"]
+        art_tokens    [label="tokens.json · tokens.css\ntailwind.config.js"]
+        art_prefs     [label="preferences.md\nuser taste profile"]
+        art_specs     [label="specs/\nlayout · responsive · component specs"]
+        art_export    [label="design-system-export/\nfinal implementation package"]
+    }
+
+    // ── Schemas & Protocol ────────────────────────────────────────
+    subgraph cluster_schemas {
+        label="Schemas  &  Protocol"
+        style="filled"
+        fillcolor="#f8fafc"
+        color="#94a3b8"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        node [shape=note style="filled" fillcolor="#ffffff" color="#94a3b8"]
+
+        schema_ctx      [label="context.schema.json\nValidates context.json"]
+        schema_tokens   [label="tokens.schema.json\nValidates tokens.json"]
+        schema_protocol [label="DESIGN-PROTOCOL.md\nSpec governing token & component artifact format"]
+    }
+
+    // ── Legend ────────────────────────────────────────────────────
+    subgraph cluster_legend {
+        label="Legend"
+        style="filled"
+        fillcolor="#f5f5f5"
+        color="#9ca3af"
+        fontname="Helvetica Bold"
+        fontsize=11
+
+        L_agent    [label="Agent"              shape=box      style="rounded,filled" fillcolor="#dbeafe" color="#3b82f6"  width=1.9]
+        L_behavior [label="Behavior"           shape=folder   style="filled"         fillcolor="#f3f4f6" color="#6b7280"  width=1.9]
+        L_recipe   [label="Recipe"             shape=component style="filled"        fillcolor="#ffedd5" color="#f97316"  width=1.9]
+        L_skill    [label="Skill"              shape=ellipse  style="filled"         fillcolor="#fce7f3" color="#ec4899"  width=1.9]
+        L_artifact [label="Runtime Artifact"  shape=cylinder style="filled"          fillcolor="#cffafe" color="#06b6d4"  width=1.9]
+        L_schema   [label="Schema / Protocol" shape=note     style="filled"          fillcolor="#ffffff" color="#94a3b8"  width=1.9]
+        L_ext      [label="External Dep"       shape=box      style="dashed,filled"  fillcolor="#ffffff" color="#9ca3af"  width=1.9]
+
+        L_agent -> L_behavior -> L_recipe -> L_skill -> L_artifact -> L_schema -> L_ext [style=invis]
+
+        // Edge semantics sub-legend
+        edge_solid  [label="→  solid: delegates / writes / invokes"  shape=plaintext style="" fillcolor="none" color="none"]
+        edge_dashed [label="⇏  dashed: loads / validates / informs"  shape=plaintext style="" fillcolor="none" color="none"]
+        edge_loop   [label="↺  thick purple: self-correction loop"   shape=plaintext style="" fillcolor="none" color="none"]
+        edge_off    [label="⊗  red dashed: disabled"                 shape=plaintext style="" fillcolor="none" color="none"]
+
+        edge_solid -> edge_dashed -> edge_loop -> edge_off [style=invis]
+    }
+
+
+    // ══════════════════════════════════════════════════════════════
+    // EDGES
+    // ══════════════════════════════════════════════════════════════
+
+    // ── External → bundle ─────────────────────────────────────────
+    amplifier_foundation  -> beh_intelligence    [style=dashed color="#9ca3af" label="provides advisory\n(ext-bundle)"]
+    image_vision_skill    -> research_runner     [style=dashed color="#9ca3af" label="used by"]
+    // discovery_interviewer used directly by recipes (see recipe→agent edges below)
+
+    // ── Disabled sub-bundle (no runtime edges — isolated by design) ─
+    design_verification   -> design_check        [style=dashed color="#ef4444" label="disabled\n(would validate)" arrowhead=odiamond fontcolor="#ef4444"]
+
+    // ── Behaviors → Agents  (dashed · "loads") ────────────────────
+    // design-baseline is passive — enriches context for all advisory outputs
+    beh_baseline     -> art_director   [style=dashed color="#9ca3af" label="quality baseline\nfor all agents"]
+
+    beh_intelligence -> art_director   [style=dashed color="#93c5fd" label="loads"]
+    beh_intelligence -> dsa            [style=dashed color="#93c5fd"]
+    beh_intelligence -> comp_designer  [style=dashed color="#93c5fd"]
+    beh_intelligence -> layout_arch    [style=dashed color="#93c5fd"]
+    beh_intelligence -> resp_strat     [style=dashed color="#93c5fd"]
+    beh_intelligence -> anim_choreo    [style=dashed color="#93c5fd"]
+    beh_intelligence -> voice_strat    [style=dashed color="#93c5fd"]
+
+    beh_research   -> research_analyst [style=dashed color="#93c5fd" label="loads"]
+    beh_research   -> research_runner  [style=dashed color="#93c5fd"]
+
+    beh_generation -> token_gen        [style=dashed color="#93c5fd" label="loads"]
+    beh_generation -> spec_writer      [style=dashed color="#93c5fd"]
+    beh_generation -> export_pkg       [style=dashed color="#93c5fd"]
+
+    beh_context    -> design_ctx       [style=dashed color="#93c5fd" label="loads"]
+    beh_context    -> design_check     [style=dashed color="#93c5fd"]
+
+    beh_skills     -> sk_brainstorm    [style=dashed color="#93c5fd" label="registers"]
+    beh_skills     -> sk_planning      [style=dashed color="#93c5fd"]
+
+    // ── Recipes → Agents  (solid · "step N") ──────────────────────
+    // design-discovery
+    r_discovery  -> discovery_interviewer [color="#f97316" label="step 1"]
+    r_discovery  -> research_runner       [color="#f97316" label="step 2"]
+    r_discovery  -> art_director          [color="#f97316" label="step 3"]
+
+    // design-system-export
+    r_sys_export -> discovery_interviewer [color="#f97316" label="step 1"]
+    r_sys_export -> art_director          [color="#f97316" label="step 2"]
+    r_sys_export -> token_gen             [color="#f97316" label="step 3"]
+    r_sys_export -> spec_writer           [color="#f97316" label="step 4"]
+    r_sys_export -> export_pkg            [color="#f97316" label="step 5"]
+
+    // design-to-implementation
+    r_to_impl    -> discovery_interviewer [color="#f97316" label="step 1"]
+    r_to_impl    -> art_director          [color="#f97316" label="step 2"]
+    r_to_impl    -> token_gen             [color="#f97316" label="step 3"]
+    r_to_impl    -> spec_writer           [color="#f97316" label="step 4"]
+    r_to_impl    -> export_pkg            [color="#f97316" label="step 5"]
+
+    // weekly-design-scrape  (all three steps invoke research-runner)
+    r_scrape -> research_runner [color="#f97316" label="step 1 · fetch-feeds"]
+    r_scrape -> research_runner [color="#f97316" label="step 2 · gen-summary"]
+    r_scrape -> research_runner [color="#f97316" label="step 3 · update-index"]
+
+    // ── Agents → Artifacts  (solid · "writes") ────────────────────
+    art_director -> art_aesthetic [color="#334155" label="writes"]
+    layout_arch  -> art_specs     [color="#334155" label="writes to\n.design/specs/"]
+    resp_strat   -> art_specs     [color="#334155" label="writes to\n.design/specs/"]
+    token_gen    -> art_tokens    [color="#334155" label="writes"]
+    spec_writer  -> art_specs     [color="#334155" label="writes"]
+    export_pkg   -> art_export    [color="#334155" label="writes"]
+
+    // ── Context agent → artifact  (solid · "maintains") ──────────
+    design_ctx   -> art_context   [color="#8b5cf6" penwidth=2 label="maintains"]
+
+    // ── context.json informs advisory agents (dashed · "informs") ────────────
+    art_context -> art_director   [color="#06b6d4" label="informs" style=dashed]
+    art_context -> comp_designer  [color="#06b6d4" style=dashed]
+
+    // ── Behavior → artifact  (solid · "maintains") ────────────────
+    beh_taste    -> art_prefs     [color="#6b7280" label="maintains"]
+
+    // ── taste preferences inform advisory agents (dashed · "informs") ─────────
+    art_prefs -> art_director  [color="#06b6d4" label="informs\ntaste" style=dashed]
+    art_prefs -> comp_designer [color="#06b6d4" style=dashed]
+
+    // ── Agent → Agent  (solid · cross-agent) ─────────────────────
+    design_check -> design_ctx    [color="#8b5cf6" penwidth=2 label="triggers on write"]
+
+    // ── Self-correction loop: advisory agents → design_check (dotted · "self-check") ──
+    comp_designer -> design_check [color="#3b82f6" label="self-check" style=dotted penwidth=1.5]
+    layout_arch   -> design_check [color="#3b82f6" style=dotted penwidth=1.5]
+    dsa           -> design_check [color="#3b82f6" style=dotted penwidth=1.5]
+
+    // ── Self-correction loop: generation agents → design_check ─────────────────
+    token_gen    -> design_check  [color="#f59e0b" label="self-check" style=dotted penwidth=1.5]
+    spec_writer  -> design_check  [color="#f59e0b" style=dotted penwidth=1.5]
+
+    // ── Skills → Agents  (dashed · "invokes") ────────────────────
+    sk_brainstorm -> research_analyst [style=dashed color="#ec4899" label="invokes"]
+    sk_brainstorm -> art_director     [style=dashed color="#ec4899" label="invokes"]
+    sk_planning   -> art_director     [style=dashed color="#ec4899" label="invokes"]
+
+    // ── Schemas → Artifacts  (dashed · "validates / governs") ────
+    schema_ctx      -> art_context [style=dashed color="#94a3b8" label="validates"]
+    schema_tokens   -> art_tokens  [style=dashed color="#94a3b8" label="validates"]
+    schema_protocol -> art_tokens  [style=dashed color="#94a3b8" label="governs"]
+    schema_protocol -> art_specs   [style=dashed color="#94a3b8" label="governs"]
+
+}

@@ -1,0 +1,170 @@
+# Weekly Design Research Recipe v2 — RSS-based workflow
+#
+# This recipe collects design trend data from public RSS feeds provided by
+# Awwwards, Siteinspire, and The FWA. No automated scraping or headless
+# browser (Playwright, Puppeteer, etc.) is required — RSS feeds are the
+# publicly intended syndication format for these sources.
+#
+# For visual analysis of specific sites discovered through this workflow,
+# use the research-analyst agent interactively and provide screenshots
+# for deeper investigation.
+#
+# Usage:
+#   execute recipes/weekly-design-scrape.yaml with year=2026 month=01 month_name=january date=2026-01-13
+#
+# Archive structure:
+#   archive/
+#   ├── YYYY/
+#   │   └── MM-month/
+#   │       ├── raw/
+#   │       │   ├── awwwards-YYYY-MM-DD.json
+#   │       │   ├── siteinspire-YYYY-MM-DD.json
+#   │       │   └── thefwa-YYYY-MM-DD.json
+#   │       └── summary.md
+#   └── context/
+#       └── archive-index.md
+
+name: "weekly-design-research"
+description: >
+  Automated design research workflow that fetches featured projects from
+  Awwwards, Siteinspire, and The FWA RSS feeds, generates trend summaries,
+  and updates the research archive index. For visual analysis, users can
+  provide screenshots of specific sites for deeper investigation.
+version: "2.0.0"
+tags: ["design", "research", "trends", "automation"]
+
+# Context variables — provide these at runtime
+context:
+  year: ""         # e.g., "2026"
+  month: ""        # e.g., "01"
+  month_name: ""   # e.g., "january"
+  date: ""         # e.g., "2026-01-13"
+
+steps:
+  # Step 1: Fetch and parse RSS feeds from all three sources
+  - id: "fetch-feeds"
+    agent: "design-intelligence:research-runner"
+    prompt: |
+      Fetch RSS feeds from Awwwards, Siteinspire, and The FWA, then parse
+      and archive the structured data.
+
+      Tasks:
+      1. Create the archive directory structure:
+         archive/{{year}}/{{month}}-{{month_name}}/raw/
+
+      2. Use `web_fetch` to retrieve each RSS feed:
+         - https://www.awwwards.com/websites/rss/
+         - https://www.siteinspire.com/websites.rss
+         - https://thefwa.com/rss/awards
+
+      3. Parse the XML from each feed. For every <item> (or <entry>), extract:
+         - title        (project / site name)
+         - link / url   (URL of the featured project)
+         - description  (summary text, strip HTML tags)
+         - pubDate      (publication / award date)
+         - category     (categories or tags, if present)
+
+      4. Save each source to its own JSON file in the raw/ directory:
+         - archive/{{year}}/{{month}}-{{month_name}}/raw/awwwards-{{date}}.json
+         - archive/{{year}}/{{month}}-{{month_name}}/raw/siteinspire-{{date}}.json
+         - archive/{{year}}/{{month}}-{{month_name}}/raw/thefwa-{{date}}.json
+
+         Each JSON file should follow this structure:
+         {
+           "source": "<source name>",
+           "feed_url": "<rss url>",
+           "fetched_at": "<ISO 8601 timestamp>",
+           "projects": [
+             {
+               "title": "...",
+               "url": "...",
+               "description": "...",
+               "date": "...",
+               "categories": ["..."]
+             }
+           ]
+         }
+
+      Validation:
+      - Each JSON file must exist and be valid JSON
+      - Each file should contain at least 1 project (feeds may vary in size)
+      - Log any feed that fails to fetch or parse, but continue with the others
+
+      Report: Number of projects extracted per source, any feeds that failed.
+    output: "feeds_result"
+    timeout: 300
+    on_error: "continue"
+
+  # Step 2: Synthesize trends and generate the summary
+  - id: "generate-summary"
+    agent: "design-intelligence:research-runner"
+    prompt: |
+      Read the raw feed data and generate a design-trend summary.
+
+      Tasks:
+      1. Read all JSON files from:
+         archive/{{year}}/{{month}}-{{month_name}}/raw/
+
+      2. Analyze the collected projects across all three sources and identify
+         emerging trends in the following categories:
+         - Animation & Motion — scroll effects, transitions, micro-interactions
+         - Color — dominant palettes, gradients, dark/light mode prevalence
+         - Layout — grid systems, hero patterns, asymmetric layouts, whitespace
+         - Typography — font pairings, variable fonts, large type, kinetic type
+         - Navigation — menu patterns, scroll-driven navigation, mobile-first
+
+      3. Create the summary file:
+         archive/{{year}}/{{month}}-{{month_name}}/summary.md
+
+         Structure:
+         ## Design Trends — {{month_name}} {{year}}
+         **Date:** {{date}}
+         **Sources:** Awwwards, Siteinspire, The FWA
+         **Total projects reviewed:** <count>
+
+         ### Trend Highlights
+         (One subsection per category above, with specific examples)
+
+         ### Notable Projects
+         (Top 5-8 standout projects with title, URL, source, and why notable)
+
+         ### Data Sources
+         (Links to the raw JSON files for reference)
+
+      Keep the summary focused on actionable design insights. Reference
+      specific projects as evidence for each trend you identify.
+
+      Report: Summary file path, number of trends identified, total project count.
+    output: "summary_result"
+    timeout: 600
+    on_error: "continue"
+
+  # Step 3: Update the rolling archive index
+  - id: "update-archive-index"
+    agent: "design-intelligence:research-runner"
+    prompt: |
+      Regenerate the archive index from recent summaries.
+
+      Tasks:
+      1. Scan for all summary.md files from the last 30 days under archive/
+      2. Extract the top trends from each summary
+      3. Consolidate into unified trend categories:
+         - Animation & Interaction
+         - Color & Visual Style
+         - Layout & Typography
+         - Notable Techniques
+      4. Regenerate context/archive-index.md with:
+         - A brief overview of the date range covered
+         - Top 3–5 trends per category
+         - Links to the detailed monthly summaries
+         - A short note on archive structure
+      5. Keep the total length under 500 tokens so it can be loaded
+         efficiently as LLM context by the research-analyst agent
+
+      The archive index is the "quick-start" reference — it should give any
+      agent or user an immediate sense of what is trending in web design
+      right now, with pointers to dig deeper.
+
+      Report: Archive index path, date range covered, number of summaries incorporated.
+    output: "archive_result"
+    timeout: 600

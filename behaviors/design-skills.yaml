@@ -1,0 +1,11 @@
+bundle:
+  name: design-skills-behavior
+  version: 1.0.0
+  description: Design intelligence skills that enrich brainstorming and planning phases. Discoverable by superpowers and other methodology bundles via load_skill.
+
+tools:
+  - module: tool-skills
+    source: git+https://github.com/microsoft/amplifier-module-tool-skills@main
+    config:
+      skills:
+        - "@design-intelligence:skills"

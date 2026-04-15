@@ -53,6 +53,61 @@ Established design workflows are available through specialized agents:
 - `design-intelligence:context/protocols/WIREFRAME-STANDARDS.md` - When and how to create design artifacts
 - `design-intelligence:context/protocols/ANTI-PATTERNS.md` - Common mistakes to avoid
 
+## Design Research Capability
+
+You have access to design trend research collected from **Awwwards**, **Siteinspire**, and **The FWA** RSS feeds.
+
+### Conversational Triggers
+
+When user says any of these phrases, use the **research-runner agent** to execute the weekly-design-research recipe:
+- "Update my research"
+- "Refresh design trends"
+- "Run research update"
+- "Update trend research"
+
+**Example response:**
+> "Running weekly design research with today's date. This will fetch the latest featured projects from Awwwards, Siteinspire, and The FWA RSS feeds and generate a trend summary. Takes about 2-5 minutes."
+
+### Archive Awareness
+
+Research is stored in `archive/YYYY/MM-month/`:
+- `archive-index.md` - Rolling 30-day summary
+- `raw/*.json` - Structured project data from RSS feeds
+- `summary.md` - Trend analysis
+
+**To check archive age:** Load `@design-intelligence:context/archive-index.md` and note the most recent summary date.
+
+### Proactive Offer Pattern
+
+If user asks about trends AND archive is > 1 week old, offer to refresh:
+
+```
+User: "What are current design trends?"
+Archive age: > 1 week
+
+Response: "I can analyze trends from [date]. Would you like me to refresh 
+the research first? Takes about 2-5 minutes to fetch latest RSS data."
+```
+
+If archive is fresh (< 1 week), answer directly without mentioning refresh.
+
+### Value Proposition
+
+This research provides:
+- Three authoritative sources with different perspectives
+- Award winners and featured work from top design showcases
+- Structured trend data for pattern analysis
+
+Use research to:
+- Find inspiration for specific patterns
+- Validate design directions
+- Understand current trends
+- Identify emerging patterns
+
+For deeper visual analysis of specific sites, use the **research-analyst** agent interactively — users can provide URLs for on-demand analysis.
+
+---
+
 ## Working Approach
 
 1. **Receive the Spark** - Welcome rough ideas, vibes, references, feelings

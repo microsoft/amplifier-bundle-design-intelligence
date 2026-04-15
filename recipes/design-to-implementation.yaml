@@ -1,0 +1,162 @@
+# Design to Implementation Recipe
+# The full pipeline: idea → discovery → design → generate → export → ready to code
+
+name: design-to-implementation
+description: |
+  Complete end-to-end workflow from project idea to implementation-ready 
+  design system. Produces everything a coding agent needs to build.
+
+# Input context:
+# - project: Brief description of what you're building
+# - components: Specific components to spec (optional)
+# - framework: tailwind|css|react (optional, default: tailwind)
+
+steps:
+  # Step 1: Discovery Interview
+  # NOTE: This step delegates to discovery:discovery-interviewer, which requires
+  # the Discovery bundle to be loaded (amplifier-bundle-discovery). If the
+  # Discovery bundle is not available, skip this step and provide a discovery
+  # brief manually as input to subsequent steps.
+  - id: discover
+    agent: discovery:discovery-interviewer
+    prompt: |
+      Conduct design discovery for this project:
+      
+      {{project}}
+      
+      Gather:
+      - Purpose: What problem does this solve?
+      - Audience: Who uses this and in what context?
+      - Goals: What does success look like?
+      - Expression: How should it feel? What aesthetic?
+      - Constraints: Accessibility, platforms, brand guidelines?
+      
+      Be thorough but efficient. Output a Discovery Brief.
+
+  # Step 2: Research Context (if archive available)
+  - id: research
+    agent: design-intelligence:art-director
+    prompt: |
+      Review this discovery brief and establish design direction:
+      
+      {{steps.discover.result}}
+      
+      Provide:
+      
+      ## Aesthetic Strategy
+      - 3-5 defining adjectives
+      - What to embrace
+      - What to avoid
+      
+      ## Design Principles
+      - 3-5 principles specific to this project
+      - How they apply to UI decisions
+      
+      ## Recommendations
+      - Color direction (primary, secondary, mood)
+      - Typography direction (personality, suggested families)
+      - Layout approach (density, structure)
+      - Motion philosophy (subtle vs expressive)
+      
+      ## Quality Baseline
+      - What "done well" looks like for this project
+      - Non-negotiables
+
+  # Step 3: Generate Tokens
+  - id: tokens
+    agent: design-intelligence:token-generator
+    prompt: |
+      Generate a complete Design Protocol token file.
+      
+      ## Discovery Brief
+      {{steps.discover.result}}
+      
+      ## Design Direction
+      {{steps.research.result}}
+      
+      Output complete tokens.json with:
+      - color (primary, secondary, neutral 50-950, semantic)
+      - typography (families, scale xs-4xl, weights)
+      - spacing (4px base, full scale)
+      - radius (sm through full)
+      - shadow (sm through xl)
+      - motion (duration, easing)
+      
+      Then output exports:
+      - tokens.css (CSS custom properties)
+      - tailwind.config.js (Tailwind theme extension)
+      
+      Use Design Protocol format exactly.
+
+  # Step 4: Component Specifications
+  - id: components
+    agent: design-intelligence:spec-writer
+    prompt: |
+      Write Design Protocol component specifications.
+      
+      Components to spec: {{components | default: "Button, Input, Card, Alert, Badge"}}
+      
+      Reference these tokens:
+      {{steps.tokens.result}}
+      
+      For each component:
+      - meta (name, description, category)
+      - variants (list all)
+      - sizes (sm, md, lg)
+      - props (with types, defaults, descriptions)
+      - tokens (styling per variant - reference token paths, no hardcoding)
+      - accessibility (role, focus, contrast, touch target)
+      - behavior (per state: default, hover, active, focus, disabled, loading)
+      - examples (usage code)
+      
+      Output each as valid JSON following Design Protocol schema.
+
+  # Step 5: Export Package
+  - id: export
+    agent: design-intelligence:export-packager
+    prompt: |
+      Create the final export package for coding agents.
+      
+      ## Project
+      {{project}}
+      
+      ## Design Direction
+      {{steps.research.result}}
+      
+      ## Tokens
+      {{steps.tokens.result}}
+      
+      ## Component Specs
+      {{steps.components.result}}
+      
+      ## Target Framework
+      {{framework | default: "tailwind"}}
+      
+      Produce complete package:
+      
+      1. **README.md** - Quick start for implementers
+         - Project context
+         - Token overview
+         - Components list
+         - How to use
+      
+      2. **Token Files**
+         - tokens.json (source of truth)
+         - tokens.css (CSS custom properties)
+         - tailwind.config.js (if Tailwind)
+      
+      3. **Component Specs**
+         - Individual JSON files per component
+         - Index listing all components
+      
+      4. **Implementation Prompt**
+         - Complete prompt to paste into coding agent
+         - All tokens and specs included
+         - Clear instructions and success criteria
+      
+      Format output so each file is clearly labeled with its path.
+
+# Final Output:
+# The export step produces everything needed to hand off to a coding agent.
+# User can paste the implementation prompt into Claude Code, Cursor, or Copilot
+# and the agent will have complete context to build the design system.

@@ -1,0 +1,14 @@
+bundle:
+  name: design-research-behavior
+  version: 1.0.0
+  description: Adds design research capabilities for collecting and analyzing recent design trends via RSS feeds.
+
+agents:
+  include:
+    - design-intelligence:research-runner
+    - design-intelligence:research-analyst
+
+context:
+  include:
+    - design-intelligence:context/research-instructions.md
+    - design-intelligence:context/archive-index.md

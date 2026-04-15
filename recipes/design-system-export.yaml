@@ -1,0 +1,143 @@
+# Design System Export Recipe
+# Full pipeline from discovery to implementation-ready export package
+
+name: design-system-export
+description: |
+  Complete design system generation pipeline. Takes a project through discovery,
+  generates tokens and component specs, and produces an export package ready
+  for coding agents to implement.
+
+# Input context:
+# - project_description: What are we building?
+# - components: List of components to spec (optional, defaults to core set)
+# - framework: Target framework - tailwind|css|both (optional, defaults to both)
+
+steps:
+  # Phase 1: Discovery
+  # NOTE: This step delegates to discovery:discovery-interviewer, which requires
+  # the Discovery bundle to be loaded (amplifier-bundle-discovery). If the
+  # Discovery bundle is not available, skip this step and supply a discovery
+  # brief manually as input to Phase 2 (direction).
+  - id: discover
+    agent: discovery:discovery-interviewer
+    prompt: |
+      Conduct design discovery for:
+      
+      {{project_description}}
+      
+      Focus on:
+      - Purpose and intent (what problem does this solve?)
+      - Target audience (who uses this?)
+      - Visual direction (how should it feel?)
+      - Constraints (accessibility, platforms, existing brand)
+      
+      Output a comprehensive Discovery Brief.
+
+  # Phase 2: Design Direction
+  - id: direction
+    agent: design-intelligence:art-director
+    prompt: |
+      Based on this discovery brief, establish a design direction:
+      
+      {{steps.discover.result}}
+      
+      Provide:
+      1. Aesthetic Strategy (3-5 adjectives, what to embrace/avoid)
+      2. Design Principles (3-5 guiding principles)
+      3. Initial Recommendations:
+         - Color direction (warm/cool, primary/secondary suggestions)
+         - Typography direction (personality, font family suggestions)
+         - Motion philosophy (subtle/expressive)
+      4. Quality Baseline (what "done well" looks like)
+
+  # Phase 3: Generate Tokens
+  - id: tokens
+    agent: design-intelligence:token-generator
+    prompt: |
+      Generate Design Protocol tokens based on:
+      
+      ## Discovery Brief
+      {{steps.discover.result}}
+      
+      ## Design Direction
+      {{steps.direction.result}}
+      
+      Produce complete tokens.json with:
+      - Color tokens (primary, secondary, neutral scale, semantic)
+      - Typography tokens (families, scale, weights)
+      - Spacing tokens (base unit, scale)
+      - Radius, shadow, motion tokens
+      
+      Also produce exports:
+      - tokens.css (CSS custom properties)
+      - tailwind.config.js (Tailwind configuration)
+
+  # Phase 3.5: Sync tokens to .design/ for context reconciliation
+  #
+  # ⚠️  PIPELINE NOTE: The token-generator above writes tokens to
+  # `design-system-export/tokens/tokens.json` (inside the export package).
+  # That path is NOT watched by the design-context reconciler. To keep
+  # .design/context.json current, this step extracts the token content and
+  # writes it to `.design/tokens.json` — the path the reconciler reads.
+  #
+  # If you skip or remove this step, context.json will NOT reflect these
+  # tokens and downstream agents (art-director, spec-writer, etc.) will
+  # see stale or missing token data when they read context.json.
+  - id: sync-context
+    agent: design-intelligence:design-context
+    prompt: |
+      The token-generator has produced a new token set. Before running your
+      normal reconciliation, extract the tokens.json content from the output
+      below and write it to `.design/tokens.json`.
+
+      Then proceed with your full reconciliation process: read all `.design/`
+      artifacts, extract structured data, merge into `.design/context.json`,
+      and report any conflicts.
+
+      Token generator output:
+      {{steps.tokens.result}}
+
+  # Phase 4: Component Specs (if components requested)
+  - id: components
+    agent: design-intelligence:spec-writer
+    prompt: |
+      Write component specifications for: {{components | default: "Button, Input, Card, Alert"}}
+      
+      Reference these tokens:
+      {{steps.tokens.result}}
+      
+      For each component, produce a Design Protocol spec with:
+      - Variants and sizes
+      - Props with types and defaults
+      - Token references (not hardcoded values)
+      - Accessibility requirements
+      - Behavior descriptions
+      - Usage examples
+
+  # Phase 5: Export Package
+  - id: export
+    agent: design-intelligence:export-packager
+    prompt: |
+      Create a complete export package for coding agents.
+      
+      ## Tokens
+      {{steps.tokens.result}}
+      
+      ## Components
+      {{steps.components.result}}
+      
+      ## Design Direction
+      {{steps.direction.result}}
+      
+      Target framework: {{framework | default: "both"}}
+      
+      Produce:
+      1. README.md - Quick start guide
+      2. Token files (CSS, Tailwind, SCSS)
+      3. Component specs in JSON
+      4. Implementation prompts for coding agents
+      5. Usage examples
+
+# Output:
+# Complete export package ready for implementation.
+# The export-packager will produce all files needed to hand off to coding agents.

@@ -1,0 +1,430 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://design-intelligence.dev/schemas/context.json",
+  "title": "Design Context",
+  "description": "Machine-readable design system state file (.design/context.json). Captures the full design context — colors, typography, spacing, motion, layout, style, voice — with provenance tracking and completeness scoring.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "description": "Schema metadata, provenance, and completeness tracking. Required whenever the file exists.",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema_version", "last_updated"],
+      "properties": {
+        "schema_version": {
+          "description": "Semantic version of the context schema this file conforms to.",
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "examples": ["1.0.0"]
+        },
+        "last_updated": {
+          "description": "ISO 8601 datetime of the last modification.",
+          "type": "string",
+          "format": "date-time",
+          "examples": ["2026-03-12T16:00:00Z"]
+        },
+        "completeness": {
+          "description": "How complete the design context is across all sections.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "score": {
+              "description": "Overall completeness score from 0 (empty) to 100 (fully defined).",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "defined": {
+              "description": "Section names that are explicitly defined from authoritative sources.",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "inferred": {
+              "description": "Section names whose values were inferred by an agent.",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "missing": {
+              "description": "Section names with no data at all.",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "conflicted": {
+              "description": "Section names where multiple sources disagree.",
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "sources": {
+          "description": "Provenance map: which file/agent produced each section and when.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "file": {
+                "description": "Source file path that the section was derived from.",
+                "type": "string"
+              },
+              "agent": {
+                "description": "Name or identifier of the agent that produced this section.",
+                "type": "string"
+              },
+              "date": {
+                "description": "ISO 8601 datetime when this section was last sourced.",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "color": {
+      "description": "Color palette, semantic roles, and constraints.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "palette": {
+          "description": "Named color palette. Keys are color names, values are hex color strings.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+          }
+        },
+        "semantic": {
+          "description": "Semantic color roles mapping design intent to specific hex values.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+          },
+          "properties": {
+            "primary":    { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "secondary":  { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "accent":     { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "error":      { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "success":    { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "warning":    { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "info":       { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "background": { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "surface":    { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" },
+            "text":       { "type": "string", "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$" }
+          }
+        },
+        "constraints": {
+          "description": "Design constraints and rules governing color usage (e.g., WCAG requirements).",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "rationale": {
+          "description": "Free-text explanation of why these colors were chosen.",
+          "type": "string"
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "typography": {
+      "description": "Font families, type scale, and weight palette.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "families": {
+          "description": "Font family assignments by role.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "heading": { "type": "string", "description": "Font family for headings." },
+            "body":    { "type": "string", "description": "Font family for body text." },
+            "mono":    { "type": "string", "description": "Font family for monospace/code." }
+          }
+        },
+        "scale": {
+          "description": "Typographic scale definition.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ratio": {
+              "description": "Scale ratio (e.g., 1.25 for Major Third, 1.333 for Perfect Fourth).",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "base": {
+              "description": "Base font size the scale is computed from.",
+              "type": "string",
+              "examples": ["16px"]
+            },
+            "sizes": {
+              "description": "Named size steps mapping to computed values.",
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+        "weights": {
+          "description": "Available font weights.",
+          "type": "array",
+          "items": { "type": "integer" },
+          "examples": [[400, 500, 600, 700]]
+        },
+        "constraints": {
+          "description": "Design constraints governing typography usage.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "spacing": {
+      "description": "Spacing scale, base unit, and density preference.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "base": {
+          "description": "Base spacing unit that the scale is built on.",
+          "type": "string",
+          "examples": ["8px", "4px"]
+        },
+        "scale": {
+          "description": "Named spacing steps from extra-small to extra-large.",
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "properties": {
+            "xs":  { "type": "string" },
+            "sm":  { "type": "string" },
+            "md":  { "type": "string" },
+            "lg":  { "type": "string" },
+            "xl":  { "type": "string" },
+            "2xl": { "type": "string" }
+          }
+        },
+        "density": {
+          "description": "Overall density preference for the design system.",
+          "type": "string",
+          "enum": ["editorial", "balanced", "dense"]
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "motion": {
+      "description": "Animation timing, easing curves, and reduced-motion strategy.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "timing": {
+          "description": "Duration presets for animations.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "fast":   { "type": "string", "description": "Fast duration.", "examples": ["100ms"] },
+            "normal": { "type": "string", "description": "Normal duration.", "examples": ["200ms"] },
+            "slow":   { "type": "string", "description": "Slow duration.", "examples": ["400ms"] }
+          }
+        },
+        "easing": {
+          "description": "Named easing curves for different transition types.",
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "properties": {
+            "default":  { "type": "string", "examples": ["ease-out"] },
+            "entrance": { "type": "string", "examples": ["cubic-bezier(0.0, 0.0, 0.2, 1)"] },
+            "exit":     { "type": "string", "examples": ["cubic-bezier(0.4, 0.0, 1, 1)"] }
+          }
+        },
+        "reduced_motion": {
+          "description": "Strategy for respecting prefers-reduced-motion.",
+          "type": "string"
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "radius": {
+      "description": "Border-radius scale and nesting rules.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "scale": {
+          "description": "Named radius steps.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "nesting_rule": {
+          "description": "Rule for computing inner radii from outer radii (e.g., 'inner = outer - padding').",
+          "type": "string",
+          "examples": ["inner = outer - padding"]
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "layout": {
+      "description": "Page layout constraints: max width, grid, and breakpoints.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "max_width": {
+          "description": "Maximum content width.",
+          "type": "string",
+          "examples": ["1280px"]
+        },
+        "grid": {
+          "description": "Grid system definition.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "columns": {
+              "description": "Number of grid columns.",
+              "type": "integer",
+              "minimum": 1
+            },
+            "gutter": {
+              "description": "Gutter width between columns.",
+              "type": "string"
+            }
+          }
+        },
+        "breakpoints": {
+          "description": "Named responsive breakpoints.",
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "properties": {
+            "mobile":  { "type": "string" },
+            "tablet":  { "type": "string" },
+            "desktop": { "type": "string" },
+            "wide":    { "type": "string" }
+          }
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "style": {
+      "description": "Aesthetic direction, influences, and anti-patterns.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "aesthetic": {
+          "description": "Style keywords that capture the intended look and feel.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["minimal", "warm", "rounded"]]
+        },
+        "influences": {
+          "description": "Reference sites, brands, or design systems that inform the style.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["Linear", "Stripe", "Vercel"]]
+        },
+        "avoid": {
+          "description": "Explicit anti-patterns — things this design system should never do.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["skeuomorphism", "heavy gradients", "all-caps body text"]]
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "voice": {
+      "description": "Tone of voice, personality traits, and UI copy patterns.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "tone": {
+          "description": "Tone calibration for UI copy.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "formality": {
+              "description": "Formality level of the voice.",
+              "type": "string",
+              "enum": ["casual", "balanced", "formal"]
+            },
+            "personality": {
+              "description": "Personality trait keywords.",
+              "type": "array",
+              "items": { "type": "string" },
+              "examples": [["friendly", "concise", "helpful"]]
+            }
+          }
+        },
+        "patterns": {
+          "description": "Copy patterns for common UI states.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "errors": {
+              "description": "Voice pattern for error messages.",
+              "type": "string"
+            },
+            "cta": {
+              "description": "Voice pattern for calls to action.",
+              "type": "string"
+            },
+            "empty_state": {
+              "description": "Voice pattern for empty states.",
+              "type": "string"
+            }
+          }
+        },
+        "_status": {
+          "$ref": "#/$defs/sectionStatus"
+        }
+      }
+    },
+
+    "conflicts": {
+      "description": "Active conflicts between sources that need human resolution.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["section", "description", "sources"],
+        "properties": {
+          "section": {
+            "description": "The context section where the conflict exists.",
+            "type": "string"
+          },
+          "description": {
+            "description": "Human-readable description of the conflict.",
+            "type": "string"
+          },
+          "sources": {
+            "description": "List of source identifiers that disagree.",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "sectionStatus": {
+      "description": "Provenance status of a context section.",
+      "type": "string",
+      "enum": ["defined", "inferred", "missing", "conflicted"]
+    }
+  }
+}

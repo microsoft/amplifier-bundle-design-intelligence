@@ -1,0 +1,126 @@
+---
+bundle:
+  name: design-studio-extension
+  version: 1.0.0
+  description: Extends foundation with design research, generation, and discovery capabilities (advisory agents already included in foundation)
+
+includes:
+  # Design context - required by advisory agents for design-check validation
+  - bundle: git+https://github.com/microsoft/amplifier-bundle-design-intelligence@main#subdirectory=behaviors/design-context.yaml
+  # Research capabilities - trend collection and analysis
+  - bundle: git+https://github.com/microsoft/amplifier-bundle-design-intelligence@main#subdirectory=behaviors/design-research.yaml
+  # Generation capabilities - tokens, specs, export packages
+  - bundle: git+https://github.com/microsoft/amplifier-bundle-design-intelligence@main#subdirectory=behaviors/design-generation.yaml
+  # Taste awareness - personal preference learning
+  - bundle: git+https://github.com/microsoft/amplifier-bundle-design-intelligence@main#subdirectory=behaviors/taste-awareness.yaml
+  # Discovery integration for structured design interviews (optional)
+  # Uncomment to enable: requires the discovery bundle to be loaded separately
+  # - bundle: git+https://github.com/microsoft/amplifier-bundle-discovery@main
+---
+
+# Design Studio Extension
+
+> **Extends foundation's design capabilities with research, generation, and discovery.**
+
+## What This Adds
+
+Foundation already includes the **7 design advisory agents** (art-director, component-designer, etc.). This extension adds:
+
+### Design Context
+- **design-context reconciler** - Maintains `.design/context.json` as structured source of truth for all design decisions
+- **design-check validator** - Three-layer validation (static, structural, visual) used by advisory agents for self-correction
+- Required by advisory agents for design-check validation and write-back to context.json
+
+### Research Capabilities
+- **research-runner** - Collect design trend data from Awwwards/Siteinspire/The FWA RSS feeds
+- **research-analyst** - Analyze trends, synthesize findings using purpose-driven methodology
+
+### Generation Capabilities
+- **token-generator** - Generate design tokens (colors, typography, spacing, motion)
+- **spec-writer** - Write component specifications
+- **export-packager** - Package design artifacts for implementation handoff
+
+### Taste Awareness
+- Personal taste profile learning and preference tracking
+- Confidence-calibrated design decisions based on demonstrated preferences
+
+### Discovery Integration (Optional)
+- Compatible with the Discovery bundle for structured design interviews
+- When loaded alongside the Discovery bundle: progressive 4-layer methodology for requirements gathering
+- Discovery brief generation
+
+## When to Use This Extension
+
+**You DON'T need this if:**
+- You just want design advice and direction (foundation has that)
+- You're designing components or systems conversationally
+- You need aesthetic strategy or layout architecture
+
+**You DO need this if:**
+- You want to collect and analyze current design trends
+- You need to generate design tokens programmatically
+- You want component specifications and export packages
+- You're running the full design discovery -> research -> generate workflow
+- You want taste profile learning across sessions
+
+## Installation
+
+### Add to Existing Foundation Session
+
+```bash
+# Load as additional bundle
+amplifier bundle use foundation design-studio-extension
+```
+
+### Include in Custom Bundle
+
+```yaml
+includes:
+  - bundle: git+https://github.com/microsoft/amplifier-foundation@main
+  - bundle: git+https://github.com/microsoft/amplifier-bundle-design-intelligence@main#subdirectory=extension-bundle.yaml
+```
+
+## What You Get
+
+With foundation + this extension, you have the complete design pipeline:
+
+```
+1. DISCOVER (Discovery bundle — optional companion)
+   |
+2. DESIGN (7 advisory agents from foundation)
+   |
+3. RESEARCH (research-runner, research-analyst from extension)
+   |
+4. GENERATE (token-generator, spec-writer, export-packager from extension)
+```
+
+## Recipes Available
+
+With the extension, you can run:
+- `design-discovery` - Discovery -> research -> design direction
+- `design-to-implementation` - Full pipeline: idea -> tokens -> export
+- `design-system-export` - Generate tokens + specs + package
+- `weekly-design-research` - Automated trend research via RSS (Awwwards, Siteinspire, The FWA)
+
+## Usage
+
+```
+"Run the design-discovery recipe for my healthcare dashboard"
+"Research recent design trends for fintech applications"
+"Generate design tokens from this aesthetic direction"
+"Create component specs for the design system"
+"Update my research"
+```
+
+---
+
+## Why This Architecture?
+
+**Foundation includes advisory by default** because design thinking is universally useful - even non-designers benefit from aesthetic guidance, layout advice, and component design help.
+
+**Research and generation are optional** because they're specialized workflows:
+- Not everyone needs trend research
+- Token generation is for design systems, not every project
+- Export packages are for formal handoffs
+
+This keeps foundation lean while making advanced capabilities available on-demand.
